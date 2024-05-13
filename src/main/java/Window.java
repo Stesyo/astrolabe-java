@@ -1,12 +1,9 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
 import javax.swing.*;
 
 public class Window extends JFrame
 {
-        private JPanel startPanel;
+        private JPanel mainPanel;
 
         public Window()
         {
@@ -15,13 +12,17 @@ public class Window extends JFrame
                 this.setSize(600, 600);
                 this.getContentPane().setBackground(Color.BLACK);
 
-                startPanel = new JPanel(new GridLayout(1, 1));
-                Maze maze = new Maze(10, 10);
+                mainPanel = new JPanel(new BorderLayout());
+                Maze maze = new Maze(100, 100);
                 maze.entry = 0;
                 maze.exit = 99;
-                startPanel.add(maze);
+                mainPanel.add(maze, BorderLayout.CENTER);
 
-                this.add(startPanel);
+                this.addMouseMotionListener(maze);
+                this.addMouseListener(maze);
+                this.addMouseWheelListener(maze);
+
+                this.add(mainPanel);
                 this.setVisible(true);
         }
 }
