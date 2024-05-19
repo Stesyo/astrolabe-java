@@ -77,7 +77,7 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
                         List<Tile> line = new ArrayList<>();
                         for (int j = 0; j < this.width; j++)
                         {
-                                line.add(new Tile(Math.random() < 0.5));
+                                line.add(new Tile(false));
                         }
                         this.tiles.add(line);
                 }
@@ -260,12 +260,15 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
 		this.repaint();
         }
 	public void loadMazeFromFile(String filePath) {
+		tiles = new ArrayList<List<Tile>>();
 		try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
 			String line;
 			int y = 0;
 			while ((line = br.readLine()) != null) {
-				if (line.trim().isEmpty()) continue;
-				if (this.width == 0) this.width = line.length();
+				if (line.trim().isEmpty())
+					continue;
+				if (this.width == 0) 
+					this.width = line.length();
 				List<Tile> row = new ArrayList<>();
 				for (int x = 0; x < line.length(); x++) {
 					char c = line.charAt(x);

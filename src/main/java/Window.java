@@ -71,9 +71,8 @@ public class Window extends JFrame implements ActionListener
 		case "Otwórz":
 			mainPanel.removeAll();
 
-			maze = new Maze(10, 10);
-			maze.entry = 0;
-			maze.exit = 99;
+			maze = new Maze();
+			maze.loadMazeFromFile("maze.txt");
 			mainPanel.add(maze, BorderLayout.CENTER);
 			mainPanel.add(maze.initBottom(), BorderLayout.SOUTH);
 			addMouseMotionListener(maze);
