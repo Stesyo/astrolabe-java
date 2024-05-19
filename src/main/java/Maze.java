@@ -6,9 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class Maze extends JComponent implements MouseInputListener, MouseWheelListener
 {
+
+
         public class Tile
         {
                 public boolean wall;
@@ -39,6 +44,7 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
                 this.width = 0;
                 this.height = 0;
         }
+
         public Maze(int width, int height)
         {
                 this.width = width;
@@ -168,4 +174,29 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
 		this.square_size = Math.min(150, Math.max(1, this.square_size));
 		this.repaint();
         }
+
+    public void loadMazeFromFile(String filePath) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            int y = 0;
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+                if (this.width == 0) this.width = line.length();
+                List<Tile> row = new ArrayList<>();
+                for (int x = 0; x < line.length(); x++) {
+                    char c = line.charAt(x);
+                    Tile tile = new Tile(c == 'X');
+                    if (c == 'P') this.entry = y * this.width + x;
+                    if (c == 'K') this.exit = y * this.width + x;
+                    row.add(tile);
+                }
+                this.tiles.add(row);
+                y++;
+            }
+            this.height = y;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
