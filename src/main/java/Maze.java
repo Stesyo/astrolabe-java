@@ -64,6 +64,28 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
 	private Integer move_start_x = null;
 	private Integer move_start_y = null;
 
+	public void reset() {
+		square_size = 16;
+		offset_x = 0;
+		offset_y = 0;
+		this.repaint();
+	}
+
+	public void makeSmaller() {
+		int diff = Math.max(1, (int) Math.ceil(this.square_size * 0.1));
+		this.square_size -= diff;
+		this.square_size = Math.min(150, Math.max(1, this.square_size));
+		this.repaint();
+
+	}
+
+	public void makeBigger() {
+		int diff = Math.max(1, (int) Math.ceil(this.square_size * 0.1));
+		this.square_size += diff;
+		this.square_size = Math.min(150, Math.max(1, this.square_size));
+		this.repaint();
+	}
+
         @Override protected void paintComponent(Graphics g)
         {
                 super.paintComponent(g);
