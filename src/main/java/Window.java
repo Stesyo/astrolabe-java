@@ -3,6 +3,7 @@ import javax.swing.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class Window extends JFrame implements ActionListener
 {
@@ -70,9 +71,19 @@ public class Window extends JFrame implements ActionListener
 		switch (event.getActionCommand()) {
 		case "Otwórz":
 			mainPanel.removeAll();
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setFileSelectionMode(JFileChooser.OPEN_DIALOG);
+			int result = fileChooser.showOpenDialog(null);
+
+			File selectedFile;
+			if (result == JFileChooser.APPROVE_OPTION) {
+				selectedFile = fileChooser.getSelectedFile();
+			} else {
+				return;
+			}
 
 			maze = new Maze();
-			maze.loadMazeFromFile("maze.txt");
+			maze.loadMazeFromFile(selectedFile.getAbsolutePath());
 			mainPanel.add(maze, BorderLayout.CENTER);
 			mainPanel.add(maze.initBottom(), BorderLayout.SOUTH);
 			addMouseMotionListener(maze);
