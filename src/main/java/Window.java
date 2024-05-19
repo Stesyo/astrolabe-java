@@ -11,6 +11,10 @@ public class Window extends JFrame implements ActionListener
 	private JMenu viewMenu;
 	private Maze maze = null;
 
+	public JButton pathButton;
+	public JButton moveEntry;
+	public JButton moveExit;
+
         public Window()
         {
                 setTitle("Astrolabe");
@@ -20,6 +24,7 @@ public class Window extends JFrame implements ActionListener
 
                 mainPanel = new JPanel(new BorderLayout());
 		initMenuBar();
+		
 
 		JLabel label = new JLabel("Maze file not loaded");
 		label.setFont(new Font("Arial", Font.BOLD, 16));
@@ -70,6 +75,7 @@ public class Window extends JFrame implements ActionListener
 			maze.entry = 0;
 			maze.exit = 99;
 			mainPanel.add(maze, BorderLayout.CENTER);
+			mainPanel.add(maze.initBottom(), BorderLayout.SOUTH);
 			addMouseMotionListener(maze);
 			addMouseListener(maze);
 			addMouseWheelListener(maze);
@@ -86,7 +92,6 @@ public class Window extends JFrame implements ActionListener
 			mainPanel.removeAll();
 
 			JLabel label = new JLabel("Maze file not loaded");
-			label.setFont(new Font("Arial", Font.BOLD, 16));
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			mainPanel.add(label, BorderLayout.CENTER);
 
