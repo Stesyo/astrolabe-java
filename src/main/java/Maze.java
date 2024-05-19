@@ -203,7 +203,11 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
 		this.repaint();
 	}
         @Override public void mouseClicked(MouseEvent event) {
-		if (highlighted != null && moving) {
+		if (highlighted == null) {
+			return;
+		}
+		boolean isWall = tiles.get(highlighted / width).get(highlighted % width).wall;
+		if (highlighted != null && moving && !isWall) {
 			switch (movedType) {
 				case 1:
 					entry = highlighted;
@@ -219,8 +223,8 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
 			moveExit.setEnabled(true);
 			moving = false;
 			movedType = 0;
+			highlighted = null;
 		}
-		highlighted = null;
 		this.repaint();
 	}
 
