@@ -3,6 +3,7 @@ import javax.swing.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
 public class Window extends JFrame implements ActionListener
@@ -27,7 +28,7 @@ public class Window extends JFrame implements ActionListener
 		initMenuBar();
 		
 
-		JLabel label = new JLabel("Maze file not loaded");
+		JLabel label = new JLabel("Labirynt nie załadowany");
 		label.setFont(new Font("Arial", Font.BOLD, 16));
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		mainPanel.add(label, BorderLayout.CENTER);
@@ -42,6 +43,9 @@ public class Window extends JFrame implements ActionListener
 		JMenuItem openFile = new JMenuItem("Otwórz");
 		JMenuItem saveFile = new JMenuItem("Zapisz");
 		JMenuItem closeFile = new JMenuItem("Zamknij");
+		openFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
+		saveFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
+		closeFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.CTRL_DOWN_MASK));
 		openFile.addActionListener(this);
 		saveFile.addActionListener(this);
 		closeFile.addActionListener(this);
@@ -54,6 +58,9 @@ public class Window extends JFrame implements ActionListener
 		JMenuItem resetView = new JMenuItem("Reset");
 		JMenuItem smallView = new JMenuItem("Oddal");
 		JMenuItem bigView = new JMenuItem("Przybliż");
+		resetView.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_DOWN_MASK));
+		smallView.setAccelerator(KeyStroke.getKeyStroke('o'));
+		bigView.setAccelerator(KeyStroke.getKeyStroke('p'));
 		resetView.addActionListener(this);
 		smallView.addActionListener(this);
 		bigView.addActionListener(this);
@@ -102,6 +109,7 @@ public class Window extends JFrame implements ActionListener
 			mainPanel.removeAll();
 
 			JLabel label = new JLabel("Maze file not loaded");
+			label.setFont(new Font("Arial", Font.BOLD, 16));
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			mainPanel.add(label, BorderLayout.CENTER);
 

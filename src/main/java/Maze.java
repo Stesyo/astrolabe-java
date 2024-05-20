@@ -18,6 +18,7 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
         {
                 public boolean wall;
                 public boolean visited;
+		public int direciton = 0;
                 Tile()
                 {
                         this.wall = false;
@@ -32,8 +33,8 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
 
         public int width;
         public int height;
-        public int entry;
-        public int exit;
+        public Integer entry;
+        public Integer exit;
         public String file_path;
 
         public List<List<Tile>> tiles;
@@ -112,6 +113,67 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
 		int diff = Math.max(1, (int) Math.ceil(this.square_size * 0.1));
 		this.square_size += diff;
 		this.square_size = Math.min(150, Math.max(1, this.square_size));
+		this.repaint();
+	}
+
+	private void appendCond(ArrayList<Integer> list, Integer index, Integer direction, Integer dx, Integer dy) {
+		int x = index % width + dx;
+		int y = index / width + dy;
+
+		if (0 > x || 0 > y || x >= width || y >= height) {
+			return;
+		}
+		Tile tile = tiles.get(y).get(x);
+		if (tile.visited || tile.wall) {
+			return;
+		}
+		tile.direciton = direction;
+		tile.visited = true;
+		list.add(y * width + x);
+	}
+
+	public void solve() {
+		ArrayList<Integer> qNow = new ArrayList<>();
+		ArrayList<Integer> qNext = new ArrayList<>();
+		
+		qNow.add(exit);
+
+		while (qNow.size() > 0) {
+			for (Integer index : qNow) {
+				appendCond(qNext, index, 1, 0, 1);
+				appendCond(qNext, index, 2, -1, 0);
+				appendCond(qNext, index, 3, 0, -1);
+				appendCond(qNext, index, 4, 1, 0);
+			}
+			
+			qNow = qNext;
+			qNext = new ArrayList<>();
+		}
+
+		solution = new ArrayList<>();
+		int current = entry;
+		while (current != exit) {
+			solution.add(current);
+			Tile tile = tiles.get(current / width).get(current % width);
+			
+			switch (tile.direciton) {
+			case 1:
+				current-= width;
+				break;
+			case 2:
+				current += 1;
+				break;
+			case 3:
+				current += width;
+				break;
+			case 4:
+				current -= 1;
+				break;
+			default:
+				System.out.println("uff");
+				break;
+			}
+		}
 		this.repaint();
 	}
 
@@ -224,6 +286,13 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
 			moving = false;
 			movedType = 0;
 			highlighted = null;
+			solution = null;
+			for (List<Tile> line : tiles) {
+				for (Tile tile : line) {
+					tile.direciton = 0;
+					tile.visited = false;
+				}
+			}
 		}
 		this.repaint();
 	}
@@ -294,6 +363,7 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
 	public void actionPerformed(ActionEvent event) {
 		switch (event.getActionCommand()) {
 		case "Rozwiąż":
+			solve();
 			break;
 		case "Zmiana wejścia":
 			moveEntry.setEnabled(false);
