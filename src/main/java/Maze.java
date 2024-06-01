@@ -33,6 +33,8 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
 
         public int width;
         public int height;
+	public int viewport_width = 0;
+	public int viewport_height = 0;
         public Integer entry;
         public Integer exit;
         public String file_path;
@@ -183,6 +185,8 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
 
                 int width = getWidth();
                 int height = getHeight();
+		viewport_width = getWidth();
+		viewport_height = getHeight();
 
 		int center_x = width / 2;
 		int center_y = height / 2;
@@ -264,7 +268,7 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
 		highlighted = y / square_size * width + x / square_size;
 		this.repaint();
 	}
-        @Override public void mouseClicked(MouseEvent event) {
+	@Override public void mouseClicked(MouseEvent event) {
 		if (highlighted == null) {
 			return;
 		}

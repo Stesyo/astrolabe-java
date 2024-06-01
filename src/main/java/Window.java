@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 public class Window extends JFrame implements ActionListener
 {
@@ -101,7 +103,18 @@ public class Window extends JFrame implements ActionListener
 			mainPanel.revalidate();
 			break;
 		case "Zapisz":
-			System.out.println("Saving");
+			if (maze == null) {
+				return;
+			}
+			
+			BufferedImage image = new BufferedImage(maze.viewport_width, maze.viewport_height, BufferedImage.TYPE_INT_ARGB);
+			File outputFile = new File("maze.png");
+			maze.paint(image.getGraphics());
+			try {
+				ImageIO.write(image, "PNG", outputFile);
+			} catch (Exception e) {
+				System.out.println("Failed to write the image");
+			}
 			break;
 		case "Zamknij":
 			maze = null;
