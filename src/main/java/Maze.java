@@ -13,24 +13,6 @@ import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 
 public class Maze extends JComponent implements MouseInputListener, MouseWheelListener, ActionListener {
-        public class Tile {
-                public boolean wall;
-                public boolean visited;
-                public int direciton = 0;
-
-                Tile()
-                {
-                        this.wall = false;
-                        this.visited = false;
-                }
-
-                Tile(boolean wall)
-                {
-                        this.wall = wall;
-                        this.visited = false;
-                }
-        };
-
         public int width;
         public int height;
         public int viewport_width = 0;
@@ -59,20 +41,23 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
         private Integer move_start_y = null;
         private Integer highlighted = null;
 
-        public JPanel initBottom()
-        {
-                bottomPanel = new JPanel();
-                pathButton = new JButton("Rozwiąż");
-                moveEntry = new JButton("Zmiana wejścia");
-                moveExit = new JButton("Zmiana wyjścia");
-                pathButton.addActionListener(this);
-                moveEntry.addActionListener(this);
-                moveExit.addActionListener(this);
-                bottomPanel.add(pathButton);
-                bottomPanel.add(moveEntry);
-                bottomPanel.add(moveExit);
-                return bottomPanel;
-        }
+        public class Tile {
+                public boolean wall;
+                public boolean visited;
+                public int direciton = 0;
+
+                Tile()
+                {
+                        this.wall = false;
+                        this.visited = false;
+                }
+
+                Tile(boolean wall)
+                {
+                        this.wall = wall;
+                        this.visited = false;
+                }
+        };
 
         public Maze()
         {
@@ -92,6 +77,21 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
                         }
                         this.tiles.add(line);
                 }
+        }
+
+        public JPanel initBottom()
+        {
+                bottomPanel = new JPanel();
+                pathButton = new JButton("Rozwiąż");
+                moveEntry = new JButton("Zmiana wejścia");
+                moveExit = new JButton("Zmiana wyjścia");
+                pathButton.addActionListener(this);
+                moveEntry.addActionListener(this);
+                moveExit.addActionListener(this);
+                bottomPanel.add(pathButton);
+                bottomPanel.add(moveEntry);
+                bottomPanel.add(moveExit);
+                return bottomPanel;
         }
 
         public void reset()
