@@ -4,9 +4,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -349,35 +347,93 @@ public class Maze extends JComponent implements MouseInputListener, MouseWheelLi
                 this.repaint();
         }
 
-        public void loadMazeFromFile(String filePath)
-        {
-                tiles = new ArrayList<List<Tile>>();
-                try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-                        String line;
-                        int y = 0;
-                        while ((line = br.readLine()) != null) {
-                                if (line.trim().isEmpty())
-                                        continue;
-                                if (this.width == 0)
-                                        this.width = line.length();
-                                List<Tile> row = new ArrayList<>();
-                                for (int x = 0; x < line.length(); x++) {
-                                        char c = line.charAt(x);
-                                        Tile tile = new Tile(c == 'X');
-                                        if (c == 'P')
-                                                this.entry = y * this.width + x;
-                                        if (c == 'K')
-                                                this.exit = y * this.width + x;
-                                        row.add(tile);
-                                }
-                                this.tiles.add(row);
-                                y++;
-                        }
-                        this.height = y;
-                } catch (IOException e) {
-                        e.printStackTrace();
-                }
-        }
+	public void loadMazeFromFile(String filePath)
+	{
+		if(filePath.endsWith(".bin")) loadFromBinaryFile(filePath);
+		else {
+			tiles = new ArrayList<List<Tile>>();
+			try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+				String line;
+				int y = 0;
+				while ((line = br.readLine()) != null) {
+					if (line.trim().isEmpty())
+						continue;
+					if (this.width == 0)
+						this.width = line.length();
+					List<Tile> row = new ArrayList<>();
+					for (int x = 0; x < line.length(); x++) {
+						char c = line.charAt(x);
+						Tile tile = new Tile(c == 'X');
+						if (c == 'P')
+							this.entry = y * this.width + x;
+						if (c == 'K')
+							this.exit = y * this.width + x;
+						row.add(tile);
+					}
+					this.tiles.add(row);
+					y++;
+				}
+				this.height = y;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	public void loadFromBinaryFile(String filePath) {
+		try (FileInputStream fis = new FileInputStream(filePath);
+			 DataInputStream dis = new DataInputStream(fis)) {
+			short width = 0;
+			short height = 0;
+			short entryX = 0;
+			short entryY = 0;
+			short exitX = 0;
+			short exitY = 0;
+
+			int fieldId = dis.readInt();
+			int esc = dis.readUnsignedByte();
+			width =  Short.reverseBytes(dis.readShort());
+			height = Short.reverseBytes(dis.readShort());
+			entryX = Short.reverseBytes(dis.readShort());
+			entryY = Short.reverseBytes(dis.readShort());
+			exitX = Short.reverseBytes(dis.readShort());
+			exitY = Short.reverseBytes(dis.readShort());
+			dis.skipBytes(12);
+			int counter = Integer.reverseBytes(dis.readInt());
+			dis.skipBytes(4);
+			char separator = (char)dis.readUnsignedByte();
+			char wall =  (char)dis.readUnsignedByte();
+			char path = (char)dis.readUnsignedByte();
+			char value;
+			int count;
+			int cWidth = 0;
+			tiles = new ArrayList<List<Tile>>();
+			int i = 0;
+			List<Tile> row = new ArrayList<>();
+			while(i < counter) {
+				dis.skipBytes(1);
+				value = (char) dis.readUnsignedByte();
+				count = dis.readUnsignedByte();
+				i++;
+				for (int j = 0; j <= count; j++) {
+					Tile tile = new Tile(value == wall);
+					row.add(tile);
+					if(row.size() == width){
+						tiles.add(row);
+						row = new ArrayList<>();
+					}
+
+				}
+
+			}
+			this.width = width;
+			this.height = height;
+			this.entry = (entryY - 1) * width + (entryX - 1);
+			this.exit = (exitY - 1) * width + (exitX - 1);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
         @Override
         public void actionPerformed(ActionEvent event)
